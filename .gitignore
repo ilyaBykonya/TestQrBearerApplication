@@ -1,3 +1,16 @@
+#Custom
+*.pro.user*
+bin
+build
+lib
+Makefile
+*.a
+.qmake.stash
+*.autosave
+
+
+
+
 # C++ objects and libs
 *.slo
 *.lo

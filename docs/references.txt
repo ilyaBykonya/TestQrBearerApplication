@@ -1,0 +1,1 @@
+https://itnotesblog.ru/note/struktura-qt-proekta-na-cpp
