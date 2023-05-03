@@ -1,0 +1,3 @@
+[submodule "src/Libraries/qt-qrcode"]
+	path = src/Libraries/qt-qrcode
+	url = git@github.com:ilyaBykonya/qt-qrcode.git
