@@ -17,6 +17,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix|win32: LIBS += -L$$PWD/../../../build/src/Libraries/qt-qrcode/lib/ -lqtqrcode
-INCLUDEPATH += $$PWD/../../Libraries/qt-qrcode/lib
-DEPENDPATH += $$PWD/../../Libraries/qt-qrcode/lib
+unix|win32: LIBS += -L$${PROJECT_ROOT_PATH}/build/src/Libraries/qt-qrcode/lib/ -lqtqrcode
+INCLUDEPATH += $${INTERNAL_INCLUDE_PATH}/Libraries/qt-qrcode/lib
+DEPENDPATH += $${INTERNAL_INCLUDE_PATH}/Libraries/qt-qrcode/lib
