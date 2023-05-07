@@ -1,18 +1,18 @@
-#include "ImagesController.h"
+#include "ImageController.h"
 #include <QJsonArray>
 #include <QBuffer>
 
 namespace controllers {
-ImagesController::ImagesController(const std::shared_ptr<storages::ImageRepository> &images)
+ImageController::ImageController(const std::shared_ptr<storages::ImageRepository> &images)
     :m_images{ std::move(images) } {}
 
-QHttpServerResponse ImagesController::image(const QString &name) const {
+QHttpServerResponse ImageController::image(const QString &name) const {
     QByteArray result{};
     QBuffer buffer{ &result };
     m_images->image(name).save(&buffer, "PNG");
     return QHttpServerResponse{ result };
 }
-QHttpServerResponse ImagesController::imagesList() const {
+QHttpServerResponse ImageController::imagesList() const {
     return QHttpServerResponse{ QJsonArray::fromStringList(m_images->images()) };
 }
 }

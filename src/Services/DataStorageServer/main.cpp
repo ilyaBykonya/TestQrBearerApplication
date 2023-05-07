@@ -2,11 +2,11 @@
 #include <QtHttpServer>
 #include <QPixmap>
 #include <QImage>
-#include "Utils/Http/QHttpAdminAuthorizator.h"
-#include "Storages/UserBearersRepository.h"
+#include "Storages/TokenRepository.h"
 #include "Storages/ImageRepository.h"
-#include "Controllers/BearersController.h"
-#include "Controllers/ImagesController.h"
+#include "Controllers/TokenController.h"
+#include "Controllers/ImageController.h"
+#include "Utils/Http/TokenAuthorizator.h"
 #include <ranges>
 using namespace controllers;
 using namespace storages;
@@ -14,41 +14,44 @@ using namespace utils;
 
 int main(int argc, char *argv[]) {
     QCoreApplication app{ argc, argv };
-    if(app.arguments().size() == 1)
-        qFatal("Use app: <app-name> <admin-code>");
+    if(app.arguments().size() == 2)
+        qFatal("Use app: <app-name> <image-dir> <tokens-storage>");
 
-    auto bearers = std::make_shared<UserBearersRepository>("/home/the_gast/Dev/Projects/QtQrAuthentificationBearer/test-files-storage/user-bearers.txt");
-    auto images = std::make_shared<ImageRepository>("/home/the_gast/");
+    auto images = std::make_shared<ImageRepository>(argv[1]);
+    auto tokens = std::make_shared<TokenRepository>(argv[2]);
     auto server = std::make_shared<QHttpServer>();
 
-    const auto adminCode = app.arguments().at(1);
-    auto imagesController = std::make_shared<ImagesController>(images);
-    auto bearersController = std::make_shared<BearersController>(bearers);
-    auto getAllBearers = std::make_shared<QHttpAdminAuthorizator<>>(adminCode,
-        [bearersController]() { return bearersController->getAllBearers(); });
-    auto removeBearer = std::make_shared<QHttpAdminAuthorizator<QByteArray>>(adminCode,
-        [bearersController](const QByteArray& bearer) { return bearersController->removeBearer(bearer); });
-    auto createBearer = std::make_shared<QHttpAdminAuthorizator<quint64>>(adminCode,
-        [bearersController](quint64 expiration) { return bearersController->createNewUserBearer(expiration); });
+    auto imageController = std::make_shared<ImageController>(images);
+    auto tokenController = std::make_shared<TokenController>(tokens);
 
-    server->route("/time", []() {
-        return QDateTime::currentDateTime().toString();
+    auto getAllTokens = std::make_shared<TokenAuthorizator<>>(tokens,
+        [tokenController]() { return tokenController->getAllTokens(); });
+    auto createToken = std::make_shared<TokenAuthorizator<quint64>>(tokens,
+        [tokenController](quint64 expiration) { return tokenController->createToken(expiration); });
+    auto removeToken = std::make_shared<TokenAuthorizator<QByteArray>>(tokens,
+        [tokenController](const QByteArray& token) { return tokenController->removeToken(token); });
+
+    auto getImagesList = std::make_shared<TokenAuthorizator<>>(tokens,
+        [imageController]() { return imageController->imagesList(); });
+    auto getImage = std::make_shared<TokenAuthorizator<QString>>(tokens,
+        [imageController](const QString& image) { return imageController->image(image); });
+
+
+    server->route("/auth/token/all/", [getAllTokens](const QHttpServerRequest& request) {
+        return getAllTokens->handle(request);
     });
-    server->route("/auth/bearer/all/<arg>", [getAllBearers](const QString& code) {
-        return getAllBearers->handle(code);
+    server->route("/auth/token/create/<arg>", [createToken](quint64 expirationSpan, const QHttpServerRequest& request) {
+        return createToken->handle(expirationSpan, request);
     });
-    server->route("/auth/bearer/create/<arg>/<arg>", [createBearer](const QString& code, quint64 expirationSpan) {
-        return createBearer->handle(code, expirationSpan);
-    });
-    server->route("/auth/bearer/remove/<arg>/<arg>", [removeBearer](const QString& code, const QByteArray& bearer) {
-        return removeBearer->handle(code, bearer);
+    server->route("/auth/token/remove/<arg>", [removeToken](const QByteArray& token, const QHttpServerRequest& request) {
+        return removeToken->handle(token, request);
     });
 
-    server->route("/data/images/list", [imagesController] {
-        return imagesController->imagesList();
+    server->route("/data/images/list", [getImagesList](const QHttpServerRequest& request) {
+        return getImagesList->handle(request);
     });
-    server->route("/data/images/<arg>", [imagesController](const QString& name) {
-        return imagesController->image(name);
+    server->route("/data/images/<arg>", [getImage](const QString& image, const QHttpServerRequest& request) {
+        return getImage->handle(image, request);
     });
     server->listen(QHostAddress::SpecialAddress::Any, 5555);
     return app.exec();

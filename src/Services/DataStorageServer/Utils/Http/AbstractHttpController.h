@@ -4,10 +4,10 @@
 
 namespace utils {
 template<typename...Args>
-struct QAbstractHttpController {
-    Q_DISABLE_COPY(QAbstractHttpController);
+struct AbstractHttpController {
+    Q_DISABLE_COPY(AbstractHttpController);
     virtual QHttpServerResponse handle(const Args&...) = 0;
-    virtual ~QAbstractHttpController() = default;
-    QAbstractHttpController() = default;
+    virtual ~AbstractHttpController() = default;
+    AbstractHttpController() = default;
 };
 }

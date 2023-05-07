@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    AdministratorApplication \
-    DataStorageServer \
-    TestQrApplicationProject
+    #AdministratorApplication \
+    DataStorageServer# \
+    #TestQrApplicationProject

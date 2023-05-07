@@ -4,11 +4,11 @@
 #include <memory>
 
 namespace controllers {
-class ImagesController {
+class ImageController {
 private:
     std::shared_ptr<storages::ImageRepository> m_images;
 public:
-    ImagesController(const std::shared_ptr<storages::ImageRepository> &images);
+    ImageController(const std::shared_ptr<storages::ImageRepository> &images);
 public:
     QHttpServerResponse image(const QString& name) const;
     QHttpServerResponse imagesList() const;
