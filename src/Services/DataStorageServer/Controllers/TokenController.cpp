@@ -9,8 +9,8 @@ TokenController::TokenController(const std::shared_ptr<storages::TokenRepository
 QHttpServerResponse TokenController::createToken(quint64 expirationSpan) {
     return QHttpServerResponse{ m_tokens->createToken(QDateTime::currentDateTime().addSecs(expirationSpan)).toString() };
 }
-QHttpServerResponse TokenController::removeToken(const QByteArray &bearer) {
-    m_tokens->removeToken(QUuid::fromString(bearer));
+QHttpServerResponse TokenController::removeToken(const QByteArray &token) {
+    m_tokens->removeToken(QUuid::fromString(token));
     return QHttpServerResponse{ QHttpServerResponse::StatusCode::Accepted };
 }
 QHttpServerResponse TokenController::getAllTokens() {
