@@ -10,10 +10,10 @@ TokenView::TokenView(QWidget* parent)
      m_tokens{ new TokenModel{} },
      m_view{ new QListView{} } {
         m_view->setModel(m_tokens);
-        auto showTokenButton = new QPushButton{ "*" };
-        auto refreshModelButton = new QPushButton{ "U" };
-        auto createTokenButton = new QPushButton{ "+" };
-        auto removeTokenButton = new QPushButton{ "-" };
+        auto showTokenButton = new QPushButton{ QIcon{ ":/images/icon-qr-code.png" }, {} };
+        auto refreshModelButton = new QPushButton{ QIcon{ ":/images/icon-update.png" }, {} };
+        auto createTokenButton = new QPushButton{ QIcon{ ":/images/icon-plus.png" }, {} };
+        auto removeTokenButton = new QPushButton{ QIcon{ ":/images/icon-minus.png" }, {} };
 
         connect(m_view, &QAbstractItemView::doubleClicked, this, &TokenView::showToken);
         connect(showTokenButton, &QPushButton::clicked, this, &TokenView::showToken);
@@ -23,6 +23,7 @@ TokenView::TokenView(QWidget* parent)
 
         auto layout = new QVBoxLayout{};
             auto buttonLayout = new QHBoxLayout{};
+            buttonLayout->addWidget(refreshModelButton);
             buttonLayout->addWidget(createTokenButton);
             buttonLayout->addWidget(removeTokenButton);
             buttonLayout->addWidget(showTokenButton);
