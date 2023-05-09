@@ -4,16 +4,16 @@ QT += core gui widgets network
 include($${PWD}/../../Libraries/qt-qrcode/lib/qt-qrcode-app.pri)
 
 HEADERS += \
-    UserBearersModel/UserBearersModel.h \
-    View/BearerQrCore/BearerQrCodeMessageBox.h \
-    View/BearerQrCore/QrCodeWidget.h \
-    View/UserBearersView.h
+    TokenModel/TokenModel.h \
+    View/QrCode/QrCodeDialog.h \
+    View/QrCode/QrCodeWidget.h \
+    View/TokenView.h
 
 SOURCES += \
-    UserBearersModel/UserBearersModel.cpp \
-    View/BearerQrCore/BearerQrCodeMessageBox.cpp \
-    View/BearerQrCore/QrCodeWidget.cpp \
-    View/UserBearersView.cpp \
+    TokenModel/TokenModel.cpp \
+    View/QrCode/QrCodeDialog.cpp \
+    View/QrCode/QrCodeWidget.cpp \
+    View/TokenView.cpp \
     main.cpp
 
 # Default rules for deployment.

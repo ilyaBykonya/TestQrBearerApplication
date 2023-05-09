@@ -14,10 +14,12 @@ public:
         :m_next{ std::move(next) }, m_tokens{ tokens } {}
 public:
     virtual QHttpServerResponse handle(const Args&...parametes, const QHttpServerRequest& request) override {
+        qDebug() << "Request";
         if(not request.remoteAddress().isLoopback())
             if(not m_tokens->isValidToken(QUuid::fromString(request.value("Authorization"))))
                 return QHttpServerResponse::StatusCode::Unauthorized;
 
+        qDebug() << "\tSuccess";
         return m_next(parametes...);
     }
 };

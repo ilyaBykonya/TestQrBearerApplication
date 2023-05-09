@@ -9,3 +9,5 @@ void QrCodeWidget::paintEvent(QPaintEvent *event) {
     QPainter painter{ this };
     QtQrCodePainter{}.paint(m_code, painter, width(), height());
 }
+
+

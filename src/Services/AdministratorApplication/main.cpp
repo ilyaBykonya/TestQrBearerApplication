@@ -1,17 +1,11 @@
 #include <QApplication>
-#include <QWidget>
-#include <QListWidget>
-#include <QListView>
-#include "UserBearersModel/UserBearersModel.h"
-#include "View/UserBearersView.h"
+#include <QNetworkReply>
+#include "View/TokenView.h"
 
 int main(int argc, char *argv[]) {
     QApplication app{ argc, argv };
-    if(app.arguments().size() == 1)
-        qFatal("Use app: <app-name> <admin-code>");
+    TokenView window{};
 
-    auto view = new UserBearersView{ app.arguments().at(1) };
-    view->show();
-
+    window.show();
     return app.exec();
 }

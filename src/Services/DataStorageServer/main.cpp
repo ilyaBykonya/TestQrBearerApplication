@@ -53,6 +53,11 @@ int main(int argc, char *argv[]) {
     server->route("/data/images/<arg>", [getImage](const QString& image, const QHttpServerRequest& request) {
         return getImage->handle(image, request);
     });
+
+    server->setMissingHandler([](const QHttpServerRequest &request, QHttpServerResponder &&responder) {
+        responder.sendResponse("fuck");
+    });
+
     server->listen(QHostAddress::SpecialAddress::Any, 5555);
     return app.exec();
 }
